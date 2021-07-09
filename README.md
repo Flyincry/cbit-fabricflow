@@ -1,4 +1,4 @@
-# FabricFLow Dev Log
+# Fabric-AirFlow Dev Log
 
 Airflow Operator
 https://www.astronomer.io/guides/what-is-an-operator
