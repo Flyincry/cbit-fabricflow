@@ -1,5 +1,3 @@
-# Quick start (using codebase)
-
 ## Start Hyperledger Fabric network
 
 ## Clone GIT Repository
