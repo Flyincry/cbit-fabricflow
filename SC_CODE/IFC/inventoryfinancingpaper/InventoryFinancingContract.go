@@ -66,7 +66,7 @@ func (c *Contract) Receive(ctx TransactionContextInterface, jeweler string, bank
 }
 
 //Evaluated updates a inventory paper to be in Evaluated status and sets the next dealer
-func (c *Contract) Evaluate(ctx TransactionContextInterface, jeweler string, paperNumber string, evaluator string, evalDateTime error) (*InventoryFinancingPaper, error) {
+func (c *Contract) Evaluate(ctx TransactionContextInterface, jeweler string, paperNumber string, evaluator string, evalDateTime string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
 
 	if err != nil {
@@ -95,7 +95,7 @@ func (c *Contract) Evaluate(ctx TransactionContextInterface, jeweler string, pap
 }
 
 //ReadyRepo updates a inventory paper to be in ReadyRepo status and sets the next dealer
-func (c *Contract) ReadyRepo(ctx TransactionContextInterface, jeweler string, paperNumber string, repurchaser string, readyDateTime error) (*InventoryFinancingPaper, error) {
+func (c *Contract) ReadyRepo(ctx TransactionContextInterface, jeweler string, paperNumber string, repurchaser string, readyDateTime string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
 
 	if err != nil {
