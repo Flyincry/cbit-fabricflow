@@ -155,7 +155,7 @@ func (c *Contract) Accept(ctx TransactionContextInterface, jeweler string, paper
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("The bank %q has accepted the inventory financing paper %q:%q ,The accept date is %q.\nCurrent state is %q", paper.GetEvaluator(), jeweler, paperNumber, acceptDate, paper.GetState())
+	fmt.Printf("The bank %q has accepted the inventory financing paper %q:%q ,The accept date is %q.\nCurrent state is %q", paper.GetBank(), paper.GetEvaluator(), paperNumber, acceptDate, paper.GetState())
 	return paper, nil
 }
 
@@ -234,7 +234,7 @@ func (c *Contract) Default(ctx TransactionContextInterface, jeweler string, pape
 }
 
 // Repurchase updates a inventory paper status to be repurchsed
-func (c *Contract) Repurchase(ctx TransactionContextInterface, jeweler string, paperNumber string, repurchaser string, repurchaseDateTime string) (*InventoryFinancingPaper, error) {
+func (c *Contract) Repurchase(ctx TransactionContextInterface, jeweler string, paperNumber string, repurchaseDateTime string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
 
 	if err != nil {
@@ -252,6 +252,6 @@ func (c *Contract) Repurchase(ctx TransactionContextInterface, jeweler string, p
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("inventory paper %q:%q is repurchased by %q,The repurchased date is %q. Current state = %q", jeweler, paperNumber, repurchaser, repurchaseDateTime, paper.GetState())
+	fmt.Printf("inventory paper %q:%q is repurchased by %q,The repurchased date is %q. Current state = %q", jeweler, paperNumber, paper.GetRepurchaser(), repurchaseDateTime, paper.GetState())
 	return paper, nil
 }
