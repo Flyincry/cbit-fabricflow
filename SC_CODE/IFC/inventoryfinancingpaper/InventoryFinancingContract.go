@@ -32,8 +32,19 @@ func (c *Contract) Apply(ctx TransactionContextInterface, paperNumber string, je
 	if err != nil {
 		return nil, err
 	}
-
+	fmt.Printf("The jeweler %q  has applied for a new inventory financingp paper %q, the apply date is %q,the financing amount is %v.\n Current State is %q", jeweler, applyDateTime, paperNumber, financingAmount, paper.GetState())
 	return &paper, nil
+}
+
+// QueryPaper updates a inventory paper to be in received status and sets the next dealer
+func (c *Contract) QueryPaper(ctx TransactionContextInterface, jeweler string, paperNumber string) (*InventoryFinancingPaper, error) {
+	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
+
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("Current Paper: %q,%q.Current State = %q", jeweler, paperNumber, paper.GetState())
+	return paper, nil
 }
 
 // Receive updates a inventory paper to be in received status and sets the next dealer
@@ -61,7 +72,7 @@ func (c *Contract) Receive(ctx TransactionContextInterface, jeweler string, bank
 	if err != nil {
 		return nil, err
 	}
-
+	fmt.Printf("The bank %q has received the inventory financing paper %q from jeweler %q.\n Current State is %q", paper.GetBank(), paperNumber, jeweler, paper.GetState())
 	return paper, nil
 }
 
@@ -90,7 +101,7 @@ func (c *Contract) Evaluate(ctx TransactionContextInterface, jeweler string, pap
 	if err != nil {
 		return nil, err
 	}
-
+	fmt.Printf("The evluator %q has evaluated the inventory financing paper %q:%q.\n Current State is %q", paper.GetEvaluator(), jeweler, paperNumber, paper.GetState())
 	return paper, nil
 }
 
@@ -111,7 +122,7 @@ func (c *Contract) ReadyRepo(ctx TransactionContextInterface, jeweler string, pa
 	}
 
 	if !paper.IsReadyREPO() {
-		return nil, fmt.Errorf("inventory paper %s:%s is waiting for REPO's ready. Current state = %s", jeweler, paperNumber, paper.GetState())
+		return nil, fmt.Errorf("inventory paper %q:%q is waiting for REPO's ready. Current state = %q", jeweler, paperNumber, paper.GetState())
 	}
 
 	err = ctx.GetPaperList().UpdatePaper(paper)
@@ -119,7 +130,7 @@ func (c *Contract) ReadyRepo(ctx TransactionContextInterface, jeweler string, pa
 	if err != nil {
 		return nil, err
 	}
-
+	fmt.Printf("The repurchaser %q is ready to REPO the inventory financing paper  %q:%q .\nCurrent state = %q", paper.GetRepurchaser(), jeweler, paperNumber, paper.GetState())
 	return paper, nil
 }
 
@@ -144,7 +155,7 @@ func (c *Contract) Accept(ctx TransactionContextInterface, jeweler string, paper
 	if err != nil {
 		return nil, err
 	}
-
+	fmt.Printf("The bank %q has accepted the inventory financing paper %q:%q .\nCurrent state is %q", paper.GetEvaluator(), jeweler, paperNumber, paper.GetState())
 	return paper, nil
 }
 
@@ -172,7 +183,7 @@ func (c *Contract) Supervise(ctx TransactionContextInterface, jeweler string, su
 	if err != nil {
 		return nil, err
 	}
-
+	fmt.Printf("inventory paper %q:%q is in supervision by %q. Current state = %q", jeweler, paperNumber, paper.GetSupervisor(), paper.GetState())
 	return paper, nil
 }
 
@@ -230,11 +241,11 @@ func (c *Contract) Repurchase(ctx TransactionContextInterface, jeweler string, p
 		return nil, err
 	}
 
-	if paper.IsPaidBack() {
+	if paper.IsRepurchased() {
 		return nil, fmt.Errorf("paper %s:%s is already Repurchased", jeweler, paperNumber)
 	}
 
-	paper.SetPaidBack()
+	paper.SetRepurchased()
 
 	err = ctx.GetPaperList().UpdatePaper(paper)
 

@@ -174,6 +174,11 @@ func (ifc *InventoryFinancingPaper) SetDefault() {
 	ifc.state = DEFAULT
 }
 
+// SetDefault sets the state to repurchased
+func (ifc *InventoryFinancingPaper) SetRepurchased() {
+	ifc.state = REPURCHADED
+}
+
 // IsApplied returns true if state is issued
 func (ifc *InventoryFinancingPaper) IsApplied() bool {
 	return ifc.state == APPLIED
@@ -214,6 +219,11 @@ func (ifc *InventoryFinancingPaper) IsDefault() bool {
 	return ifc.state == DEFAULT
 }
 
+// IsRepurchased returns true if state is issued
+func (ifc *InventoryFinancingPaper) IsRepurchased() bool {
+	return ifc.state == REPURCHADED
+}
+
 // GetSplitKey returns values which should be used to form key
 func (ifc *InventoryFinancingPaper) GetSplitKey() []string {
 	return []string{ifc.Jeweler, ifc.PaperNumber}
@@ -229,7 +239,7 @@ func Deserialize(bytes []byte, ifc *InventoryFinancingPaper) error {
 	err := json.Unmarshal(bytes, ifc)
 
 	if err != nil {
-		return fmt.Errorf("Error deserializing inventory financing . %s", err.Error())
+		return fmt.Errorf("error deserializing inventory financing . %s", err.Error())
 	}
 
 	return nil
