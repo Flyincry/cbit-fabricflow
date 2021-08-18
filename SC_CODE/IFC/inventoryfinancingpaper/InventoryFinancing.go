@@ -52,28 +52,28 @@ type jsonInventoryFinancingPaper struct {
 
 // InventoryFinancingPaper defines a commercial paper
 type InventoryFinancingPaper struct {
-	PaperNumber     string `json:"paperNumber"`
-	Jeweler         string `json:"jeweler"`
-	ApplyDateTime   string `json:"applyDateTime"`
-	ReviseDateTime  string `json:"reviseDateTime"`
-	AcceptDateTime  string `json:"acceptDateTime"`
-	ReadyDateTime	string `json:"readyDateTime"`
-	EvalDateTime	string `json:"evalDateTime"`
-	ReceiveDateTime string `json:"receiveDateTime"`
-	EndDate			string `json:"endDateTime"`
-	PaidbackDateTime	string `json:"paidBackDateTime"`
-	RepurchaseDateTime	string `json:"RepurchaseDateTime"`
-	FinancingAmount int    `json:"financingAmount"`
-	Dealer          string `json:"dealer"`
-	state           State  `metadata:"currentState"`
-	prevstate		State  `metadata:"prevState"`
-	class           string `metadata:"class"`
-	key             string `metadata:"key"`
-	JewManu         string `json:"jewManu"`
-	Bank            string `json:"bank"`
-	Evaluator       string `json:"evaluator"`
-	Repurchaser     string `json:"repurchaser"`
-	Supervisor      string `json:"supervisor"`
+	PaperNumber        string `json:"paperNumber"`
+	Jeweler            string `json:"jeweler"`
+	ApplyDateTime      string `json:"applyDateTime"`
+	ReviseDateTime     string `json:"reviseDateTime"`
+	AcceptDateTime     string `json:"acceptDateTime"`
+	ReadyDateTime      string `json:"readyDateTime"`
+	EvalDateTime       string `json:"evalDateTime"`
+	ReceiveDateTime    string `json:"receiveDateTime"`
+	EndDate            string `json:"endDateTime"`
+	PaidbackDateTime   string `json:"paidBackDateTime"`
+	RepurchaseDateTime string `json:"RepurchaseDateTime"`
+	FinancingAmount    int    `json:"financingAmount"`
+	Dealer             string `json:"dealer"`
+	state              State  `metadata:"currentState"`
+	prevstate          State  `metadata:"prevState"`
+	class              string `metadata:"class"`
+	key                string `metadata:"key"`
+	JewManu            string `json:"jewManu"`
+	Bank               string `json:"bank"`
+	Evaluator          string `json:"evaluator"`
+	Repurchaser        string `json:"repurchaser"`
+	Supervisor         string `json:"supervisor"`
 }
 
 // UnmarshalJSON special handler for managing JSON marshalling

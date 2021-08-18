@@ -266,7 +266,7 @@ func (c *Contract) Reject(ctx TransactionContextInterface, jeweler string, paper
 	}
 
 	if !paper.IsRejectable() {
-		return nil, fmt.Errorf("Paper %s:%s is not in rejectable state. CurrState: %s", jeweler, paperNumber, paper.GetState())
+		return nil, fmt.Errorf("paper %s:%s is not in rejectable state. CurrState: %s", jeweler, paperNumber, paper.GetState())
 	}
 
 	paper.LogPrevState()
@@ -292,7 +292,7 @@ func (c *Contract) Revise(ctx TransactionContextInterface, jeweler string, paper
 	}
 
 	if paper.GetState() != APPLIED {
-		return nil, fmt.Errorf("Paper %s:%s is not in applied state, CANNOT be revised. CurrState: %s\n", jeweler, paperNumber, paper.GetState())
+		return nil, fmt.Errorf("paper %s:%s is not in applied state, CANNOT be revised. CurrState: %s", jeweler, paperNumber, paper.GetState())
 	}
 
 	paper.FinancingAmount = financingAmount
