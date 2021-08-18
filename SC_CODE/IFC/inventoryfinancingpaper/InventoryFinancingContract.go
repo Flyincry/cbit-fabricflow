@@ -26,6 +26,7 @@ func (c *Contract) Instantiate() {
 func (c *Contract) Apply(ctx TransactionContextInterface, paperNumber string, jeweler string, applyDateTime string, financingAmount int) (*InventoryFinancingPaper, error) {
 	paper := InventoryFinancingPaper{PaperNumber: paperNumber, Jeweler: jeweler, ApplyDateTime: applyDateTime, FinancingAmount: financingAmount}
 	paper.SetApplied()
+	paper.LogPrevState()
 
 	err := ctx.GetPaperList().AddPaper(&paper)
 
@@ -252,6 +253,58 @@ func (c *Contract) Repurchase(ctx TransactionContextInterface, jeweler string, p
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("inventory paper %q:%q is repurchased by %q,The repurchased date is %q. Current state = %q", jeweler, paperNumber, paper.GetRepurchaser(), repurchaseDateTime, paper.GetState())
+	fmt.Printf("inventory paper %q:%q is repurchased by %q,The repurchased date is %q. Current state = %q\n", jeweler, paperNumber, paper.GetRepurchaser(), repurchaseDateTime, paper.GetState())
+	return paper, nil
+}
+
+// Reject a contract
+func (c *Contract) Reject(ctx TransactionContextInterface, jeweler string, paperNumber string) (*InventoryFinancingPaper, error) {
+	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if !paper.IsRejectable() {
+		return nil, fmt.Errorf("Paper %s:%s is not in rejectable state. CurrState: %s", jeweler, paperNumber, paper.GetState())
+	}
+
+	paper.LogPrevState()
+
+	paper.SetApplied()
+
+	err = ctx.GetPaperList().UpdatePaper(paper)
+
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("inventory paper %q:%q is rejected. Current state = %q\n", jeweler, paperNumber, paper.GetState())
+	return paper, nil
+}
+
+// Revise a contract
+func (c *Contract) Revise(ctx TransactionContextInterface, jeweler string, paperNumber string, reviseDateTime string, financingAmount int) (*InventoryFinancingPaper, error) {
+	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if paper.GetState() != APPLIED {
+		return nil, fmt.Errorf("Paper %s:%s is not in applied state, CANNOT be revised. CurrState: %s\n", jeweler, paperNumber, paper.GetState())
+	}
+
+	paper.FinancingAmount = financingAmount
+	paper.ReviseDateTime = reviseDateTime
+
+	paper.Reinstate()
+
+	err = ctx.GetPaperList().UpdatePaper(paper)
+
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("The financing contract %s:%s is revised.\nCurrent Fin Amount is %q", jeweler, paperNumber, financingAmount)
 	return paper, nil
 }

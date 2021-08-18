@@ -55,9 +55,18 @@ type InventoryFinancingPaper struct {
 	PaperNumber     string `json:"paperNumber"`
 	Jeweler         string `json:"jeweler"`
 	ApplyDateTime   string `json:"applyDateTime"`
+	ReviseDateTime  string `json:"reviseDateTime"`
+	AcceptDateTime  string `json:"acceptDateTime"`
+	ReadyDateTime	string `json:"readyDateTime"`
+	EvalDateTime	string `json:"evalDateTime"`
+	ReceiveDateTime string `json:"receiveDateTime"`
+	EndDate			string `json:"endDateTime"`
+	PaidbackDateTime	string `json:"paidBackDateTime"`
+	RepurchaseDateTime	string `json:"RepurchaseDateTime"`
 	FinancingAmount int    `json:"financingAmount"`
 	Dealer          string `json:"dealer"`
 	state           State  `metadata:"currentState"`
+	prevstate		State  `metadata:"prevState"`
 	class           string `metadata:"class"`
 	key             string `metadata:"key"`
 	JewManu         string `json:"jewManu"`
@@ -91,6 +100,18 @@ func (ifc InventoryFinancingPaper) MarshalJSON() ([]byte, error) {
 
 // GetState returns the state
 func (ifc *InventoryFinancingPaper) GetState() State {
+	return ifc.state
+}
+
+// SetPrevState returns the previous state
+func (ifc *InventoryFinancingPaper) LogPrevState() State {
+	ifc.prevstate = ifc.state
+	return ifc.prevstate
+}
+
+// Get prev state and set as curr state
+func (ifc *InventoryFinancingPaper) Reinstate() State {
+	ifc.state = ifc.prevstate
 	return ifc.state
 }
 
@@ -222,6 +243,24 @@ func (ifc *InventoryFinancingPaper) IsDefault() bool {
 // IsRepurchased returns true if state is issued
 func (ifc *InventoryFinancingPaper) IsRepurchased() bool {
 	return ifc.state == REPURCHADED
+}
+
+// IsRejectable returns true if state is in RECEIVED EVALUATED READYREPO
+func (ifc *InventoryFinancingPaper) IsRejectable() bool {
+	var ret bool = false
+
+	if ifc.state == RECEIVED {
+		ret = true
+	}
+
+	if ifc.state == EVALUATED {
+		ret = true
+	}
+
+	if ifc.state == READYREPO {
+		ret = true
+	}
+	return ret
 }
 
 // GetSplitKey returns values which should be used to form key
