@@ -18,7 +18,7 @@ type Contract struct {
 }
 
 // Instantiate does nothing
-func (c *Contract) Instantiate() {
+func (c *Contract) Init() {
 	fmt.Println("Instantiated")
 }
 
