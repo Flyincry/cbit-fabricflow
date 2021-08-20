@@ -66,10 +66,9 @@ type InventoryFinancingPaper struct {
 	FinancingAmount    int    `json:"financingAmount"`
 	Dealer             string `json:"dealer"`
 	state              State  `metadata:"currentState"`
-	prevstate          State  `metadata:"prevState"`
+	prevstate          State  `metadata:"prevState，optional"`
 	class              string `metadata:"class"`
 	key                string `metadata:"key"`
-	JewManu            string `json:"jewManu"`
 	Bank               string `json:"bank"`
 	Evaluator          string `json:"evaluator"`
 	Repurchaser        string `json:"repurchaser"`
@@ -120,9 +119,19 @@ func (ifc *InventoryFinancingPaper) GetBank() string {
 	return ifc.Bank
 }
 
+// GetReceiveDateTime returns the receivedatetime
+func (ifc *InventoryFinancingPaper) GetReceiveDateTime() string {
+	return ifc.ReceiveDateTime
+}
+
 // GetEvaluator returns the evaluator
 func (ifc *InventoryFinancingPaper) GetEvaluator() string {
 	return ifc.Evaluator
+}
+
+// GetEvalDateTime returns the receivedatetime
+func (ifc *InventoryFinancingPaper) GetEvalDateTime() string {
+	return ifc.EvalDateTime
 }
 
 // GetRepurchaser returns the repurchaser
@@ -130,32 +139,102 @@ func (ifc *InventoryFinancingPaper) GetRepurchaser() string {
 	return ifc.Repurchaser
 }
 
+// GetReadyDateTime returns the receivedatetime
+func (ifc *InventoryFinancingPaper) GetReadyDateTime() string {
+	return ifc.ReadyDateTime
+}
+
 // GetSupervisor returns the supervisor
 func (ifc *InventoryFinancingPaper) GetSupervisor() string {
 	return ifc.Supervisor
 }
 
-// SetBank returns the state to bank
+// GetAcceptDateTime returns the acceptdatetime
+func (ifc *InventoryFinancingPaper) GetAcceptDateTime() string {
+	return ifc.AcceptDateTime
+}
+
+// GetEndDate returns the receivedatetime
+func (ifc *InventoryFinancingPaper) GetEndDate() string {
+	return ifc.EndDate
+}
+
+// GetPaidbackDateTime returns the receivedatetime
+func (ifc *InventoryFinancingPaper) GetPaidbackDateTime() string {
+	return ifc.PaidbackDateTime
+}
+
+// GetRepurchaseDateTime returns the receivedatetime
+func (ifc *InventoryFinancingPaper) GetRepurchaseDateTime() string {
+	return ifc.RepurchaseDateTime
+}
+
+// GetReviseDatetime returns the receivedatetime
+func (ifc *InventoryFinancingPaper) GetReviseDatetime() string {
+	return ifc.ReviseDateTime
+}
+
+// SetBank set the Bank to bank
 func (ifc *InventoryFinancingPaper) SetBank(bank string) {
 	ifc.Bank = bank
 }
 
-// SetEvaluator returns the state to evaluator
+//SetReceiveDateTime set the ReceiveDateTime to receiveDateTime
+func (ifc *InventoryFinancingPaper) SetReceiveDateTime(receiveDateTime string) {
+	ifc.ReceiveDateTime = receiveDateTime
+}
+
+// SetEvaluator set the Evaluator to evaluator
 func (ifc *InventoryFinancingPaper) SetEvaluator(evaluator string) {
 	ifc.Evaluator = evaluator
 }
 
-// SetRepurchaser returns the state to repurchaser
+//SetEvalDateTime set the EvalDateTime to evalDateTime
+func (ifc *InventoryFinancingPaper) SetEvalDateTime(evalDateTime string) {
+	ifc.EvalDateTime = evalDateTime
+}
+
+// SetRepurchaser set the Repurchaser to repurchaser
 func (ifc *InventoryFinancingPaper) SetRepurchaser(repurchaser string) {
 	ifc.Repurchaser = repurchaser
 }
 
-// SetSupervisor returns the state to supervisor
+//SetReadyDateTime set the ReadyDateTime to receiveDateTime
+func (ifc *InventoryFinancingPaper) SetReadyDateTime(readyDateTime string) {
+	ifc.ReadyDateTime = readyDateTime
+}
+
+//SetAcceptDateTime set the ApplyDateTime to the apllyDateTime
+func (ifc *InventoryFinancingPaper) SetAcceptDateTime(acceptDateTime string) {
+	ifc.ReadyDateTime = acceptDateTime
+}
+
+// SetEndDate set the EndDate to endDate
+func (ifc *InventoryFinancingPaper) SetEndDate(endDate string) {
+	ifc.EndDate = endDate
+}
+
+// SetPaidbackDateTime set the Paidbackdatetime to paidbackDateTime
+func (ifc *InventoryFinancingPaper) SetPaidbackDateTime(paidbackDateTime string) {
+	ifc.PaidbackDateTime = paidbackDateTime
+}
+
+// SetRepurchaseDateTime set the repurchaseatetime
+func (ifc *InventoryFinancingPaper) SetRepurchaseDateTime(repurchaseDateTime string) {
+	ifc.RepurchaseDateTime = repurchaseDateTime
+}
+
+// SetReviseDatetime set the recisedatetime
+func (ifc *InventoryFinancingPaper) SetReviseDatetime(reviseDateTime string) {
+	ifc.ReviseDateTime = reviseDateTime
+}
+
+// SetSupervisor set the state to supervisor
 func (ifc *InventoryFinancingPaper) SetSupervisor(supervisor string) {
 	ifc.Supervisor = supervisor
 }
 
-// SetApplied returns the state to applied
+// SetApplied set the state to applied
 func (ifc *InventoryFinancingPaper) SetApplied() {
 	ifc.state = APPLIED
 }

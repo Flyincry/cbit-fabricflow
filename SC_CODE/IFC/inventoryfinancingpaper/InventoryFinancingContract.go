@@ -59,6 +59,9 @@ func (c *Contract) Receive(ctx TransactionContextInterface, jeweler string, bank
 	if paper.GetBank() == "" {
 		paper.SetBank(bank)
 	}
+	if paper.GetReceiveDateTime() == "" {
+		paper.SetReadyDateTime(receiveDateTime)
+	}
 
 	if paper.IsApplied() {
 		paper.SetReceived()
@@ -87,6 +90,10 @@ func (c *Contract) Evaluate(ctx TransactionContextInterface, jeweler string, pap
 
 	if paper.GetEvaluator() == "" {
 		paper.SetEvaluator(evaluator)
+	}
+
+	if paper.GetEvalDateTime() == "" {
+		paper.SetEvalDateTime(evalDateTime)
 	}
 
 	if paper.IsReceived() {
@@ -118,6 +125,9 @@ func (c *Contract) ReadyRepo(ctx TransactionContextInterface, jeweler string, pa
 		paper.SetRepurchaser(repurchaser)
 	}
 
+	if paper.GetReadyDateTime() == "" {
+		paper.SetReadyDateTime(readyDateTime)
+	}
 	if paper.IsEvaluated() {
 		paper.SetReadyREPO()
 	}
@@ -136,7 +146,7 @@ func (c *Contract) ReadyRepo(ctx TransactionContextInterface, jeweler string, pa
 }
 
 // Accept updates a inventory paper to be in accepted status and sets the next dealer
-func (c *Contract) Accept(ctx TransactionContextInterface, jeweler string, paperNumber string, acceptDate string) (*InventoryFinancingPaper, error) {
+func (c *Contract) Accept(ctx TransactionContextInterface, jeweler string, paperNumber string, acceptDateTime string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
 
 	if err != nil {
@@ -147,6 +157,9 @@ func (c *Contract) Accept(ctx TransactionContextInterface, jeweler string, paper
 		paper.SetAccepted()
 	}
 
+	if paper.GetAcceptDateTime() == "" {
+		paper.SetAcceptDateTime(acceptDateTime)
+	}
 	if !paper.IsAccepted() {
 		return nil, fmt.Errorf("inventory paper %s:%s is not accepted by bank. Current state = %s", jeweler, paperNumber, paper.GetState())
 	}
@@ -156,7 +169,7 @@ func (c *Contract) Accept(ctx TransactionContextInterface, jeweler string, paper
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("The bank %q has accepted the inventory financing paper %q:%q ,The accept date is %q.\nCurrent state is %q", paper.GetBank(), paper.GetEvaluator(), paperNumber, acceptDate, paper.GetState())
+	fmt.Printf("The bank %q has accepted the inventory financing paper %q:%q ,The accept date is %q.\nCurrent state is %q", paper.GetBank(), paper.GetEvaluator(), paperNumber, acceptDateTime, paper.GetState())
 	return paper, nil
 }
 
@@ -170,6 +183,10 @@ func (c *Contract) Supervise(ctx TransactionContextInterface, jeweler string, su
 
 	if paper.GetSupervisor() == "" {
 		paper.SetSupervisor(supervisor)
+	}
+
+	if paper.GetEndDate() == "" {
+		paper.SetEndDate(endDate)
 	}
 	if paper.IsAccepted() {
 		paper.SetSupervising()
@@ -200,6 +217,9 @@ func (c *Contract) Payback(ctx TransactionContextInterface, jeweler string, pape
 		return nil, fmt.Errorf("paper %s:%s is already PaidBack", jeweler, paperNumber)
 	}
 
+	if paper.GetPaidbackDateTime() == "" {
+		paper.SetPaidbackDateTime(paidbackDateTime)
+	}
 	paper.SetPaidBack()
 
 	err = ctx.GetPaperList().UpdatePaper(paper)
@@ -246,6 +266,9 @@ func (c *Contract) Repurchase(ctx TransactionContextInterface, jeweler string, p
 		return nil, fmt.Errorf("paper %s:%s is already Repurchased", jeweler, paperNumber)
 	}
 
+	if paper.GetRepurchaseDateTime() == "" {
+		paper.SetRepurchaseDateTime(repurchaseDateTime)
+	}
 	paper.SetRepurchased()
 
 	err = ctx.GetPaperList().UpdatePaper(paper)
