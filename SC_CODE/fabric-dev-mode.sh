@@ -26,6 +26,9 @@ ORDERER_GENERAL_GENESISPROFILE=SampleDevModeSolo orderer
 # 2020-09-14 17:37:20.258 EDT [orderer.common.server] Main -> INFO 00c Beginning to serve requests
 
 # Start peer in another terminal windows
+# Possible Port confict:
+# File fabric-2.3/sampleconfig/core.yaml
+# change 9443 in operations to 10443
 export PATH=$(pwd)/build/bin:$PATH
 export FABRIC_CFG_PATH=$(pwd)/sampleconfig
 FABRIC_LOGGING_SPEC=chaincode=debug CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052 peer node start --peer-chaincodedev=true
