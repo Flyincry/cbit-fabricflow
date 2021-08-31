@@ -87,21 +87,18 @@ func (c *Contract) Evaluate(ctx TransactionContextInterface, jeweler string, pap
 	if err != nil {
 		return nil, err
 	}
-
-	if paper.GetEvaluator() == "" {
-		paper.SetEvaluator(evaluator)
-	}
-
-	if paper.GetEvalDateTime() == "" {
-		paper.SetEvalDateTime(evalDateTime)
-	}
-
 	if paper.IsReceived() {
-		paper.SetEvaluated()
+		if paper.GetEvaluator() == "" {
+			paper.SetEvaluator(evaluator)
+		}
+
+		if paper.GetEvalDateTime() == "" {
+			paper.SetEvalDateTime(evalDateTime)
+		}
 	}
 
-	if !paper.IsEvaluated() {
-		return nil, fmt.Errorf("inventory paper %s:%s is not yet evaluated, Current state = %s", jeweler, paperNumber, paper.GetState())
+	if !paper.IsReceived() {
+		return nil, fmt.Errorf("inventory paper %s:%s is not received by bank. Current state = %s", jeweler, paperNumber, paper.GetState())
 	}
 
 	err = ctx.GetPaperList().UpdatePaper(paper)
@@ -114,26 +111,24 @@ func (c *Contract) Evaluate(ctx TransactionContextInterface, jeweler string, pap
 }
 
 //ReadyRepo updates a inventory paper to be in ReadyRepo status and sets the next dealer
-func (c *Contract) ReadyRepo(ctx TransactionContextInterface, jeweler string, paperNumber string, repurchaser string, readyDateTime string) (*InventoryFinancingPaper, error) {
+func (c *Contract) ReadyRepo(ctx TransactionContextInterface, jeweler string, paperNumber string, repurchaser string, readyDateTime string, evaluateOutcome string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
 
 	if err != nil {
 		return nil, err
 	}
+	if paper.IsReceived() {
+		if paper.GetRepurchaser() == "" {
+			paper.SetRepurchaser(repurchaser)
+		}
 
-	if paper.GetRepurchaser() == "" {
-		paper.SetRepurchaser(repurchaser)
+		if paper.GetReadyDateTime() == "" {
+			paper.SetReadyDateTime(readyDateTime)
+		}
 	}
 
-	if paper.GetReadyDateTime() == "" {
-		paper.SetReadyDateTime(readyDateTime)
-	}
-	if paper.IsEvaluated() {
-		paper.SetReadyREPO()
-	}
-
-	if !paper.IsReadyREPO() {
-		return nil, fmt.Errorf("inventory paper %q:%q is waiting for REPO's ready. Current state = %q", jeweler, paperNumber, paper.GetState())
+	if !paper.IsReceived() {
+		return nil, fmt.Errorf("inventory paper %s:%s is not received by bank. Current state = %s", jeweler, paperNumber, paper.GetState())
 	}
 
 	err = ctx.GetPaperList().UpdatePaper(paper)
@@ -153,15 +148,15 @@ func (c *Contract) Accept(ctx TransactionContextInterface, jeweler string, paper
 		return nil, err
 	}
 
-	if paper.IsReadyREPO() {
+	if paper.GetEvaluator() != "" && paper.GetRepurchaser() != "" {
 		paper.SetAccepted()
+		if paper.GetAcceptDateTime() == "" {
+			paper.SetAcceptDateTime(acceptDateTime)
+		}
 	}
 
-	if paper.GetAcceptDateTime() == "" {
-		paper.SetAcceptDateTime(acceptDateTime)
-	}
 	if !paper.IsAccepted() {
-		return nil, fmt.Errorf("inventory paper %s:%s is not accepted by bank. Current state = %s", jeweler, paperNumber, paper.GetState())
+		return nil, fmt.Errorf("inventory paper %s:%s is not accepted by bank.The evaluator is %s. The repurchaser is %s. Current state = %s", jeweler, paperNumber, paper.GetEvaluator(), paper.GetRepurchaser(), paper.GetState())
 	}
 
 	err = ctx.GetPaperList().UpdatePaper(paper)

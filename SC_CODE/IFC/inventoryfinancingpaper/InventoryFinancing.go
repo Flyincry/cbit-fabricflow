@@ -244,16 +244,6 @@ func (ifc *InventoryFinancingPaper) SetReceived() {
 	ifc.state = RECEIVED
 }
 
-// SetEvaluated sets the state to Evaluated
-func (ifc *InventoryFinancingPaper) SetEvaluated() {
-	ifc.state = EVALUATED
-}
-
-// SetReadyREPO sets the state to readyRepo
-func (ifc *InventoryFinancingPaper) SetReadyREPO() {
-	ifc.state = READYREPO
-}
-
 // SetAccepted sets the state to accepted
 func (ifc *InventoryFinancingPaper) SetAccepted() {
 	ifc.state = ACCEPTED
@@ -274,52 +264,42 @@ func (ifc *InventoryFinancingPaper) SetDefault() {
 	ifc.state = DEFAULT
 }
 
-// SetDefault sets the state to repurchased
+// SetRepurchased sets the state to repurchased
 func (ifc *InventoryFinancingPaper) SetRepurchased() {
 	ifc.state = REPURCHADED
 }
 
-// IsApplied returns true if state is issued
+// IsApplied returns true if state is APPLIED
 func (ifc *InventoryFinancingPaper) IsApplied() bool {
 	return ifc.state == APPLIED
 }
 
-// IsReceived returns true if state is issued
+// IsReceived returns true if state is RECEIVED
 func (ifc *InventoryFinancingPaper) IsReceived() bool {
 	return ifc.state == RECEIVED
 }
 
-// IsEvaluated returns true if state is issued
-func (ifc *InventoryFinancingPaper) IsEvaluated() bool {
-	return ifc.state == EVALUATED
-}
-
-// IsReadyREPO returns true if state is issued
-func (ifc *InventoryFinancingPaper) IsReadyREPO() bool {
-	return ifc.state == READYREPO
-}
-
-// IsAccepted returns true if state is issued
+// IsAccepted returns true if state is Accepted
 func (ifc *InventoryFinancingPaper) IsAccepted() bool {
 	return ifc.state == ACCEPTED
 }
 
-// Supervising returns true if state is issued
+// Supervising returns true if state is Supervising
 func (ifc *InventoryFinancingPaper) IsSupervising() bool {
 	return ifc.state == SUPERVISING
 }
 
-// IsPaidBack returns true if state is issued
+// IsPaidBack returns true if state is PaidBack
 func (ifc *InventoryFinancingPaper) IsPaidBack() bool {
 	return ifc.state == PAIDBACK
 }
 
-// IsDefault returns true if state is issued
+// IsDefault returns true if state is Default
 func (ifc *InventoryFinancingPaper) IsDefault() bool {
 	return ifc.state == DEFAULT
 }
 
-// IsRepurchased returns true if state is issued
+// IsRepurchased returns true if state is Repurchased
 func (ifc *InventoryFinancingPaper) IsRepurchased() bool {
 	return ifc.state == REPURCHADED
 }
