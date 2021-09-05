@@ -87,79 +87,16 @@ The Airflow metadata database has a total of 30 tables tables are stored on the 
 
 ----------
 
-F-Key
-
-Name
-
-Type
-
-Description
-
-id
-
-serial
-
-_PRIMARY KEY_
-
-label
-
-character varying(200)
-
-conn_id
-
-character varying(250)
-
-_NOT NULL_
+F-Key Name Type Description id serial 
+_PRIMARY KEY_ label conn_id
 
 [public.users.id](https://www.astronomer.io/guides/airflow-database#public.users)
 
-user_id
-
-integer
-
-chart_type
-
-character varying(100)
+user_id integer chart_type character varying(100)
 
 sql_layout
 
-character varying(50)
-
-sql
-
-text
-
-y_log_scale
-
-boolean
-
-show_datatable
-
-boolean
-
-show_sql
-
-boolean
-
-height
-
-integer
-
-default_params
-
-character varying(5000)
-
-x_is_date
-
-boolean
-
-iteration_no
-
-integer
-
-last_modified
-
-timestamp with time zone
+character varying(50) sql text y_log_scale boolean show_datatable boolean show_sql boolean heightinteger default_params character varying(5000) x_is_date boolean iteration_no integer last_modified timestamp with time zone
 
 ----------
 
@@ -169,79 +106,7 @@ timestamp with time zone
 
 ----------
 
-F-Key
-
-Name
-
-Type
-
-Description
-
-dag_id
-
-character varying(250)
-
-_PRIMARY KEY_
-
-is_paused
-
-boolean
-
-is_subdag
-
-boolean
-
-is_active
-
-boolean
-
-last_scheduler_run
-
-timestamp with time zone
-
-last_pickled
-
-timestamp with time zone
-
-last_expired
-
-timestamp with time zone
-
-scheduler_lock
-
-boolean
-
-pickle_id
-
-integer
-
-fileloc
-
-character varying(2000)
-
-owners
-
-character varying(2000)
-
-description
-
-text
-
-default_view
-
-character varying(25)
-
-schedule_interval
-
-text
-
-root_dag_id
-
-character varying(250)
-
-**Indexes:**
-
--   **idx_root_dag_id**  root_dag_id
+F-Key Name Type Description dag_id character varying(250)
 
 ----------
 
@@ -263,20 +128,6 @@ id
 
 serial
 
-_PRIMARY KEY_
-
-pickle
-
-bytea
-
-created_dttm
-
-timestamp with time zone
-
-pickle_hash
-
-bigint
-
 ----------
 
 ### public.dag_run
@@ -296,46 +147,6 @@ Description
 id
 
 serial
-
-_PRIMARY KEY_
-
-dag_id
-
-character varying(250)
-
-_UNIQUE#2 UNIQUE#1_
-
-execution_date
-
-timestamp with time zone
-
-_UNIQUE#2_
-
-state
-
-character varying(50)
-
-run_id
-
-character varying(250)
-
-_UNIQUE#1_
-
-external_trigger
-
-boolean
-
-conf
-
-bytea
-
-end_date
-
-timestamp with time zone
-
-start_date
-
-timestamp with time zone
 
 **Indexes:**
 
@@ -360,32 +171,6 @@ Description
 dag_id
 
 character varying(250)
-
-_PRIMARY KEY_
-
-fileloc
-
-character varying(2000)
-
-_NOT NULL_
-
-fileloc_hash
-
-integer
-
-_NOT NULL_
-
-data
-
-json
-
-_NOT NULL_
-
-last_updated
-
-timestamp with time zone
-
-_NOT NULL_
 
 **Indexes:**
 
@@ -417,81 +202,6 @@ dag_id
 
 character varying(250)
 
-_PRIMARY KEY_
-
-execution_date
-
-timestamp with time zone
-
-_PRIMARY KEY_
-
-start_date
-
-timestamp with time zone
-
-end_date
-
-timestamp with time zone
-
-duration
-
-double precision
-
-state
-
-character varying(20)
-
-try_number
-
-integer
-
-hostname
-
-character varying(1000)
-
-unixname
-
-character varying(1000)
-
-job_id
-
-integer
-
-pool
-
-character varying(50)
-
-_NOT NULL_
-
-queue
-
-character varying(256)
-
-priority_weight
-
-integer
-
-operator
-
-character varying(1000)
-
-queued_dttm
-
-timestamp with time zone
-
-pid
-
-integer
-
-max_tries
-
-integer
-
-_DEFAULT '-1'::integer_
-
-executor_config
-
-bytea
 
 **Tables referencing this one via Foreign Key Constraints:**
 
@@ -525,62 +235,6 @@ Description
 id
 
 serial
-
-_PRIMARY KEY_
-
-[public.task_instance.task_id#1](https://www.astronomer.io/guides/airflow-database#public.task-instance)
-
-task_id
-
-character varying(250)
-
-_NOT NULL_
-
-[public.task_instance.dag_id#1](https://www.astronomer.io/guides/airflow-database#public.task-instance)
-
-dag_id
-
-character varying(250)
-
-_NOT NULL_
-
-[public.task_instance.execution_date#1](https://www.astronomer.io/guides/airflow-database#public.task-instance)
-
-execution_date
-
-timestamp with time zone
-
-_NOT NULL_
-
-try_number
-
-integer
-
-_NOT NULL_
-
-start_date
-
-timestamp with time zone
-
-_NOT NULL_
-
-end_date
-
-timestamp with time zone
-
-_NOT NULL_
-
-duration
-
-integer
-
-_NOT NULL_
-
-reschedule_date
-
-timestamp with time zone
-
-_NOT NULL_
 
 **Indexes:**
 
