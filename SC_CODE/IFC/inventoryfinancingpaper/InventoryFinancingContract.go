@@ -5,7 +5,9 @@
 package inventoryfinancingpaper
 
 import (
+	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
@@ -23,16 +25,17 @@ func (c *Contract) Instantiate() {
 }
 
 // Apply creates a new inventory paper and stores it in the world state
-func (c *Contract) Apply(ctx TransactionContextInterface, paperNumber string, jeweler string, applyDateTime string, financingAmount int) (*InventoryFinancingPaper, error) {
-	paper := InventoryFinancingPaper{PaperNumber: paperNumber, Jeweler: jeweler, ApplyDateTime: applyDateTime, FinancingAmount: financingAmount}
+func (c *Contract) Apply(ctx TransactionContextInterface, paperNumber string, jeweler string, financingAmount int) (*InventoryFinancingPaper, error) {
+	paper := InventoryFinancingPaper{PaperNumber: paperNumber, Jeweler: jeweler, FinancingAmount: financingAmount}
 	paper.SetApplied()
 	paper.LogPrevState()
-
+	applyDateTime := time.Now().String()
 	err := ctx.GetPaperList().AddPaper(&paper)
 
 	if err != nil {
 		return nil, err
 	}
+
 	fmt.Printf("The jeweler %q  has applied for a new inventory financingp paper %q, the apply date is %q,the financing amount is %v.\n Current State is %q", jeweler, paperNumber, applyDateTime, financingAmount, paper.GetState())
 	return &paper, nil
 }
@@ -49,7 +52,7 @@ func (c *Contract) QueryPaper(ctx TransactionContextInterface, jeweler string, p
 }
 
 // Receive updates a inventory paper to be in received status and sets the next dealer
-func (c *Contract) Receive(ctx TransactionContextInterface, jeweler string, bank string, paperNumber string, receiveDateTime string) (*InventoryFinancingPaper, error) {
+func (c *Contract) Receive(ctx TransactionContextInterface, jeweler string, bank string, paperNumber string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
 
 	if err != nil {
@@ -59,6 +62,9 @@ func (c *Contract) Receive(ctx TransactionContextInterface, jeweler string, bank
 	if paper.GetBank() == "" {
 		paper.SetBank(bank)
 	}
+
+	receiveDateTime := time.Now().String()
+
 	if paper.GetReceiveDateTime() == "" {
 		paper.SetReadyDateTime(receiveDateTime)
 	}
@@ -81,9 +87,9 @@ func (c *Contract) Receive(ctx TransactionContextInterface, jeweler string, bank
 }
 
 //Evaluated updates a inventory paper to be in Evaluated status and sets the next dealer
-func (c *Contract) Evaluate(ctx TransactionContextInterface, jeweler string, paperNumber string, evaluator string, evalDateTime string) (*InventoryFinancingPaper, error) {
+func (c *Contract) Evaluate(ctx TransactionContextInterface, jeweler string, paperNumber string, evaluator string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
-
+	evalDateTime := time.Now().String()
 	if err != nil {
 		return nil, err
 	}
@@ -91,8 +97,8 @@ func (c *Contract) Evaluate(ctx TransactionContextInterface, jeweler string, pap
 		if paper.GetEvaluator() == "" {
 			paper.SetEvaluator(evaluator)
 		}
-
 		if paper.GetEvalDateTime() == "" {
+
 			paper.SetEvalDateTime(evalDateTime)
 		}
 	}
@@ -111,18 +117,20 @@ func (c *Contract) Evaluate(ctx TransactionContextInterface, jeweler string, pap
 }
 
 //ReadyRepo updates a inventory paper to be in ReadyRepo status and sets the next dealer
-func (c *Contract) ReadyRepo(ctx TransactionContextInterface, jeweler string, paperNumber string, repurchaser string, readyDateTime string, evaluateOutcome string) (*InventoryFinancingPaper, error) {
+func (c *Contract) ReadyRepo(ctx TransactionContextInterface, jeweler string, paperNumber string, repurchaser string, evaluateOutcome string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
-
+	readyDateTime := time.Now().String()
 	if err != nil {
 		return nil, err
 	}
+
 	if paper.IsReceived() {
 		if paper.GetRepurchaser() == "" {
 			paper.SetRepurchaser(repurchaser)
 		}
 
 		if paper.GetReadyDateTime() == "" {
+
 			paper.SetReadyDateTime(readyDateTime)
 		}
 	}
@@ -141,9 +149,9 @@ func (c *Contract) ReadyRepo(ctx TransactionContextInterface, jeweler string, pa
 }
 
 // Accept updates a inventory paper to be in accepted status and sets the next dealer
-func (c *Contract) Accept(ctx TransactionContextInterface, jeweler string, paperNumber string, acceptDateTime string) (*InventoryFinancingPaper, error) {
+func (c *Contract) Accept(ctx TransactionContextInterface, jeweler string, paperNumber string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
-
+	acceptDateTime := time.Now().String()
 	if err != nil {
 		return nil, err
 	}
@@ -151,6 +159,7 @@ func (c *Contract) Accept(ctx TransactionContextInterface, jeweler string, paper
 	if paper.GetEvaluator() != "" && paper.GetRepurchaser() != "" {
 		paper.SetAccepted()
 		if paper.GetAcceptDateTime() == "" {
+
 			paper.SetAcceptDateTime(acceptDateTime)
 		}
 	}
@@ -169,9 +178,9 @@ func (c *Contract) Accept(ctx TransactionContextInterface, jeweler string, paper
 }
 
 // Supervising updates a inventory paper to be in supervising status and sets the next dealer
-func (c *Contract) Supervise(ctx TransactionContextInterface, jeweler string, supervisor string, endDate string, paperNumber string) (*InventoryFinancingPaper, error) {
+func (c *Contract) Supervise(ctx TransactionContextInterface, jeweler string, supervisor string, paperNumber string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
-
+	endDateTime := time.Now().String()
 	if err != nil {
 		return nil, err
 	}
@@ -181,7 +190,7 @@ func (c *Contract) Supervise(ctx TransactionContextInterface, jeweler string, su
 	}
 
 	if paper.GetEndDate() == "" {
-		paper.SetEndDate(endDate)
+		paper.SetEndDate(endDateTime)
 	}
 	if paper.IsAccepted() {
 		paper.SetSupervising()
@@ -196,14 +205,14 @@ func (c *Contract) Supervise(ctx TransactionContextInterface, jeweler string, su
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("inventory paper %q:%q is in supervision by %q,The end date is %q. Current state = %q", jeweler, paperNumber, paper.GetSupervisor(), endDate, paper.GetState())
+	fmt.Printf("inventory paper %q:%q is in supervision by %q,The end date is %q. Current state = %q", jeweler, paperNumber, paper.GetSupervisor(), endDateTime, paper.GetState())
 	return paper, nil
 }
 
 // Payback updates a inventory paper status to be paidback
-func (c *Contract) Payback(ctx TransactionContextInterface, jeweler string, paperNumber string, paidbackDateTime string) (*InventoryFinancingPaper, error) {
+func (c *Contract) Payback(ctx TransactionContextInterface, jeweler string, paperNumber string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
-
+	paidbackDateTime := time.Now().String()
 	if err != nil {
 		return nil, err
 	}
@@ -250,9 +259,9 @@ func (c *Contract) Default(ctx TransactionContextInterface, jeweler string, pape
 }
 
 // Repurchase updates a inventory paper status to be repurchsed
-func (c *Contract) Repurchase(ctx TransactionContextInterface, jeweler string, paperNumber string, repurchaseDateTime string) (*InventoryFinancingPaper, error) {
+func (c *Contract) Repurchase(ctx TransactionContextInterface, jeweler string, paperNumber string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
-
+	repurchaseDateTime := time.Now().String()
 	if err != nil {
 		return nil, err
 	}
@@ -302,9 +311,9 @@ func (c *Contract) Reject(ctx TransactionContextInterface, jeweler string, paper
 }
 
 // Revise a contract
-func (c *Contract) Revise(ctx TransactionContextInterface, jeweler string, paperNumber string, reviseDateTime string, financingAmount int) (*InventoryFinancingPaper, error) {
+func (c *Contract) Revise(ctx TransactionContextInterface, jeweler string, paperNumber string, financingAmount int) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
-
+	reviseDateTime := time.Now().String()
 	if err != nil {
 		return nil, err
 	}
@@ -325,4 +334,32 @@ func (c *Contract) Revise(ctx TransactionContextInterface, jeweler string, paper
 	}
 	fmt.Printf("The financing contract %s:%s is revised.\nCurrent Fin Amount is %q", jeweler, paperNumber, financingAmount)
 	return paper, nil
+}
+
+// GetAllAssets returns all assets found in world state
+func (c *Contract) GetAllAssets(ctx contractapi.TransactionContextInterface) ([]*InventoryFinancingPaper, error) {
+	// range query with empty string for startKey and endKey does an
+	// open-ended query of all assets in the chaincode namespace.
+	resultsIterator, err := ctx.GetStub().GetStateByRange("", "")
+	if err != nil {
+		return nil, err
+	}
+	defer resultsIterator.Close()
+
+	var papers []*InventoryFinancingPaper
+	for resultsIterator.HasNext() {
+		queryResponse, err := resultsIterator.Next()
+		if err != nil {
+			return nil, err
+		}
+
+		var paper InventoryFinancingPaper
+		err = json.Unmarshal(queryResponse.Value, &paper)
+		if err != nil {
+			return nil, err
+		}
+		papers = append(papers, &paper)
+	}
+
+	return papers, nil
 }
