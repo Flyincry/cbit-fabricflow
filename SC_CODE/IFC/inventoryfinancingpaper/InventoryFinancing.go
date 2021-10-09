@@ -66,7 +66,7 @@ type InventoryFinancingPaper struct {
 	FinancingAmount    int    `json:"financingAmount"`
 	Dealer             string `json:"dealer"`
 	state              State  `metadata:"currentState"`
-	prevstate          State  `metadata:"prevState，optional"`
+	prevstate          State  `metadata:"prevState,optional"`
 	class              string `metadata:"class"`
 	key                string `metadata:"key"`
 	Bank               string `json:"bank"`
@@ -119,6 +119,11 @@ func (ifc *InventoryFinancingPaper) GetBank() string {
 	return ifc.Bank
 }
 
+// GetApplyDateTime returns the applydatetime
+func (ifc *InventoryFinancingPaper) GetApplyDateTime() string {
+	return ifc.ApplyDateTime
+}
+
 // GetReceiveDateTime returns the receivedatetime
 func (ifc *InventoryFinancingPaper) GetReceiveDateTime() string {
 	return ifc.ReceiveDateTime
@@ -139,7 +144,7 @@ func (ifc *InventoryFinancingPaper) GetRepurchaser() string {
 	return ifc.Repurchaser
 }
 
-// GetReadyDateTime returns the receivedatetime
+// GetReadyDateTime returns the receivedatetime.
 func (ifc *InventoryFinancingPaper) GetReadyDateTime() string {
 	return ifc.ReadyDateTime
 }
@@ -177,6 +182,11 @@ func (ifc *InventoryFinancingPaper) GetReviseDatetime() string {
 // SetBank set the Bank to bank
 func (ifc *InventoryFinancingPaper) SetBank(bank string) {
 	ifc.Bank = bank
+}
+
+//SetApplyDateTime set the ApplyDateTime to applyDateTime
+func (ifc *InventoryFinancingPaper) SetApplyDateTime(applyDateTime string) {
+	ifc.ApplyDateTime = applyDateTime
 }
 
 //SetReceiveDateTime set the ReceiveDateTime to receiveDateTime
