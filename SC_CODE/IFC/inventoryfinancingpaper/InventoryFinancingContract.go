@@ -85,26 +85,36 @@ func (c *Contract) Receive(ctx TransactionContextInterface, jeweler string, bank
 	return paper, nil
 }
 
-//Evaluated updates a inventory paper to be in Evaluated status and sets the next dealer
-func (c *Contract) Evaluate(ctx TransactionContextInterface, jeweler string, paperNumber string, evaluator string) (*InventoryFinancingPaper, error) {
+//Evaluate updates a inventory paper to be in Evaluated status and sets the next dealer
+func (c *Contract) Evaluate(ctx TransactionContextInterface, jeweler string, paperNumber string, evaluator string, assetID string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
-	evalDateTime := time.Now().String()
 	if err != nil {
 		return nil, err
 	}
-	if paper.IsReceived() {
-		if paper.GetEvaluator() == "" {
-			paper.SetEvaluator(evaluator)
-		}
-		if paper.GetEvalDateTime() == "" {
+	evalDateTime := time.Now().String()
+	asset, err := c.ReadAsset(ctx, assetID)
+	if err != nil {
+		return nil, err
+	}
+	if paper.IsReceived() {}
+	    if asset.Owner != "" {
 
+		   if paper.GetEvaluator() == "" {
+			paper.SetEvaluator(evaluator)
+		   }
+		   if paper.GetEvalDateTime() == "" {
 			paper.SetEvalDateTime(evalDateTime)
+		   }
+		   
+		if asset.Owner = "" {
+			return nil, fmt.Errorf("asset %s is not found",assetID)
 		}
 	}
 
 	if !paper.IsReceived() {
 		return nil, fmt.Errorf("inventory paper %s:%s is not received by bank. Current state = %s", jeweler, paperNumber, paper.GetState())
 	}
+	
 
 	err = ctx.GetPaperList().UpdatePaper(paper)
 
@@ -116,7 +126,7 @@ func (c *Contract) Evaluate(ctx TransactionContextInterface, jeweler string, pap
 }
 
 //ReadyRepo updates a inventory paper to be in ReadyRepo status and sets the next dealer
-func (c *Contract) ReadyRepo(ctx TransactionContextInterface, jeweler string, paperNumber string, repurchaser string, evaluateOutcome string) (*InventoryFinancingPaper, error) {
+func (c *Contract) ReadyRepo(ctx TransactionContextInterface, jeweler string, paperNumber string, repurchaser string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
 	readyDateTime := time.Now().String()
 	if err != nil {
@@ -336,7 +346,7 @@ func (c *Contract) Revise(ctx TransactionContextInterface, jeweler string, paper
 }
 
 // QueryAll returns all inventoryfinancingpapers found in world state
-func (c *Contract) QueryAll(ctx contractapi.TransactionContextInterface, endKey string) ([]*InventoryFinancingPaper, error) {
+func (c *Contract) QueryAll(ctx contractapi.TransactionContextInterface, startKey string, endKey string) ([]*InventoryFinancingPaper, error) {
 	// range query with empty string for startKey and endKey does an
 	// open-ended query of all assets in the chaincode namespace.
 	fmt.Printf("haha")
