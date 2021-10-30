@@ -96,25 +96,25 @@ func (c *Contract) Evaluate(ctx TransactionContextInterface, jeweler string, pap
 	if err != nil {
 		return nil, err
 	}
-	if paper.IsReceived() {}
-	    if asset.Owner != "" {
+	if paper.IsReceived() {
+		if asset.Owner != "" {
 
-		   if paper.GetEvaluator() == "" {
-			paper.SetEvaluator(evaluator)
-		   }
-		   if paper.GetEvalDateTime() == "" {
-			paper.SetEvalDateTime(evalDateTime)
-		   }
-		   
-		if asset.Owner = "" {
-			return nil, fmt.Errorf("asset %s is not found",assetID)
+			if paper.GetEvaluator() == "" {
+				paper.SetEvaluator(evaluator)
+			}
+			if paper.GetEvalDateTime() == "" {
+				paper.SetEvalDateTime(evalDateTime)
+			}
+		}
+
+		if asset.Color == "" {
+			return nil, fmt.Errorf("asset %s is not found", assetID)
 		}
 	}
 
 	if !paper.IsReceived() {
 		return nil, fmt.Errorf("inventory paper %s:%s is not received by bank. Current state = %s", jeweler, paperNumber, paper.GetState())
 	}
-	
 
 	err = ctx.GetPaperList().UpdatePaper(paper)
 
