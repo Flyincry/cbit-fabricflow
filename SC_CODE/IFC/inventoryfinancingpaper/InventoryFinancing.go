@@ -119,9 +119,9 @@ func (ifc *InventoryFinancingPaper) GetBank() string {
 	return ifc.Bank
 }
 
-// GetAcceptDateTime returns the receivedatetime
-func (ifc *InventoryFinancingPaper) GetAcceptDateTime() string {
-	return ifc.AcceptDateTime
+// GetApplyDateTime returns the applydatetime
+func (ifc *InventoryFinancingPaper) GetApplyDateTime() string {
+	return ifc.ApplyDateTime
 }
 
 // GetReceiveDateTime returns the receivedatetime
@@ -144,7 +144,7 @@ func (ifc *InventoryFinancingPaper) GetRepurchaser() string {
 	return ifc.Repurchaser
 }
 
-// GetReadyDateTime returns the receivedatetime
+// GetReadyDateTime returns the receivedatetime.
 func (ifc *InventoryFinancingPaper) GetReadyDateTime() string {
 	return ifc.ReadyDateTime
 }
@@ -155,8 +155,8 @@ func (ifc *InventoryFinancingPaper) GetSupervisor() string {
 }
 
 // GetAcceptDateTime returns the acceptdatetime
-func (ifc *InventoryFinancingPaper) GetApplyDateTime() string {
-	return ifc.ApplyDateTime
+func (ifc *InventoryFinancingPaper) GetAcceptDateTime() string {
+	return ifc.AcceptDateTime
 }
 
 // GetEndDate returns the receivedatetime
@@ -184,6 +184,11 @@ func (ifc *InventoryFinancingPaper) SetBank(bank string) {
 	ifc.Bank = bank
 }
 
+//SetApplyDateTime set the ApplyDateTime to applyDateTime
+func (ifc *InventoryFinancingPaper) SetApplyDateTime(applyDateTime string) {
+	ifc.ApplyDateTime = applyDateTime
+}
+
 //SetReceiveDateTime set the ReceiveDateTime to receiveDateTime
 func (ifc *InventoryFinancingPaper) SetReceiveDateTime(receiveDateTime string) {
 	ifc.ReceiveDateTime = receiveDateTime
@@ -202,12 +207,6 @@ func (ifc *InventoryFinancingPaper) SetEvalDateTime(evalDateTime string) {
 // SetRepurchaser set the Repurchaser to repurchaser
 func (ifc *InventoryFinancingPaper) SetRepurchaser(repurchaser string) {
 	ifc.Repurchaser = repurchaser
-}
-
-//SetReadyDateTime set the ReadyDateTime to receiveDateTime
-func (ifc *InventoryFinancingPaper) SetApplyDateTime(applyDateTime string) {
-
-	ifc.ApplyDateTime = applyDateTime
 }
 
 //SetReadyDateTime set the ReadyDateTime to receiveDateTime
@@ -255,6 +254,16 @@ func (ifc *InventoryFinancingPaper) SetReceived() {
 	ifc.state = RECEIVED
 }
 
+// SetEvaluated sets the state to Evaluated
+func (ifc *InventoryFinancingPaper) SetEvaluated() {
+	ifc.state = EVALUATED
+}
+
+// SetReadyREPO sets the state to readyRepo
+func (ifc *InventoryFinancingPaper) SetReadyREPO() {
+	ifc.state = READYREPO
+}
+
 // SetAccepted sets the state to accepted
 func (ifc *InventoryFinancingPaper) SetAccepted() {
 	ifc.state = ACCEPTED
@@ -275,42 +284,52 @@ func (ifc *InventoryFinancingPaper) SetDefault() {
 	ifc.state = DEFAULT
 }
 
-// SetRepurchased sets the state to repurchased
+// SetDefault sets the state to repurchased
 func (ifc *InventoryFinancingPaper) SetRepurchased() {
 	ifc.state = REPURCHADED
 }
 
-// IsApplied returns true if state is APPLIED
+// IsApplied returns true if state is issued
 func (ifc *InventoryFinancingPaper) IsApplied() bool {
 	return ifc.state == APPLIED
 }
 
-// IsReceived returns true if state is RECEIVED
+// IsReceived returns true if state is issued
 func (ifc *InventoryFinancingPaper) IsReceived() bool {
 	return ifc.state == RECEIVED
 }
 
-// IsAccepted returns true if state is Accepted
+// IsEvaluated returns true if state is issued
+func (ifc *InventoryFinancingPaper) IsEvaluated() bool {
+	return ifc.state == EVALUATED
+}
+
+// IsReadyREPO returns true if state is issued
+func (ifc *InventoryFinancingPaper) IsReadyREPO() bool {
+	return ifc.state == READYREPO
+}
+
+// IsAccepted returns true if state is issued
 func (ifc *InventoryFinancingPaper) IsAccepted() bool {
 	return ifc.state == ACCEPTED
 }
 
-// Supervising returns true if state is Supervising
+// Supervising returns true if state is issued
 func (ifc *InventoryFinancingPaper) IsSupervising() bool {
 	return ifc.state == SUPERVISING
 }
 
-// IsPaidBack returns true if state is PaidBack
+// IsPaidBack returns true if state is issued
 func (ifc *InventoryFinancingPaper) IsPaidBack() bool {
 	return ifc.state == PAIDBACK
 }
 
-// IsDefault returns true if state is Default
+// IsDefault returns true if state is issued
 func (ifc *InventoryFinancingPaper) IsDefault() bool {
 	return ifc.state == DEFAULT
 }
 
-// IsRepurchased returns true if state is Repurchased
+// IsRepurchased returns true if state is issued
 func (ifc *InventoryFinancingPaper) IsRepurchased() bool {
 	return ifc.state == REPURCHADED
 }
