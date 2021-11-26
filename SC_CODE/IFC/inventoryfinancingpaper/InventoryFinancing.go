@@ -12,13 +12,13 @@ import (
 )
 
 // State enum for inventory financing  state property
+//并行功能不设置状态
 type State uint
 
 const (
-	APPLIED = iota + 1
+	AUTHORIZED = iota + 1
+	APPLIED
 	RECEIVED
-	EVALUATED
-	READYREPO
 	ACCEPTED
 	SUPERVISING
 	PAIDBACK
@@ -41,6 +41,12 @@ func CreateInventoryFinancingPaperKey(jeweler string, paperNumber string) string
 	return ledgerapi.MakeKey(jeweler, paperNumber)
 }
 
+// QueryResult structure used for handling result of query
+type QueryResult struct {
+	Key    string `json:"Key"`
+	Record *InventoryFinancingPaper
+}
+
 // Used for managing the fact status is private but want it in world state
 type InventoryFinancingPaperAlias InventoryFinancingPaper
 type jsonInventoryFinancingPaper struct {
@@ -50,29 +56,55 @@ type jsonInventoryFinancingPaper struct {
 	Key   string `json:"key"`
 }
 
-// InventoryFinancingPaper defines a commercial paper
+// InventoryFinancingPaper 定义了一个珠宝存货融资流程
 type InventoryFinancingPaper struct {
-	PaperNumber        string `json:"paperNumber"`
-	Jeweler            string `json:"jeweler"`
-	ApplyDateTime      string `json:"applyDateTime"`
-	ReviseDateTime     string `json:"reviseDateTime"`
-	AcceptDateTime     string `json:"acceptDateTime"`
-	ReadyDateTime      string `json:"readyDateTime"`
-	EvalDateTime       string `json:"evalDateTime"`
-	ReceiveDateTime    string `json:"receiveDateTime"`
-	EndDate            string `json:"endDateTime"`
-	PaidbackDateTime   string `json:"paidBackDateTime"`
-	RepurchaseDateTime string `json:"RepurchaseDateTime"`
-	FinancingAmount    int    `json:"financingAmount"`
-	Dealer             string `json:"dealer"`
+	//珠宝商发起融资申请
+	PaperNumber     string `json:"paperNumber"`     //融资申请编号
+	Jeweler         string `json:"jeweler"`         //融资申请珠宝商
+	ApplyDateTime   string `json:"applyDateTime"`   //提交申请时间（web端自动生成）
+	FinancingAmount int    `json:"financingAmount"` //融资金额
+	//生产者提供了生产信息上链
+	Productor             string `json:"productor"`             //生产商
+	ProductType           string `json:"productType"`           //货品种类
+	ProductAmount         string `json:"productAmount"`         //货品数量
+	ProductDate           string `json:"productDate"`           //货品生产日期
+	ProductInfoUpdateTime string `json:"productInfoUpdateTime"` //货品信息更新日期（web端自动生成）
+	//品牌方提供授权信息上链
+	BrandCompany          string `json:"brandCompany "`
+	GrantedObject         string `json:"grantedObject "`        //授权对象
+	GrantedStartDate      string `json:"grantedStartDate"`      //授权开始日期
+	GrantedEndDate        string `json:"grantedEndDate"`        //授权结束日期
+	GrantedInfoUpdateTime string `json:"grantedInfoUpdateTime"` //授权信息更新日期（web端自动生成）
+	//银行认证供应链各方的背书
+	AuthorizedDate string `json:"authorizedDate "` //认证和授权时间（web端自动生成）
+	//银行收到融资申请
+	Bank            string `json:"bank"`
+	ReceiveDateTime string `json:"receiveDateTime"` //收到融资申请时间（web端自动生成）
+	//评估鉴定方提供鉴定信息
+	Evaluator             string `json:"evaluator"`
+	EvalDateTime          string `json:"evalDateTime"`          //鉴定时间（web端自动生成）
+	EvalType              string `json:"evalType"`              //评估种类
+	EvalQualityProportion string `json:"evalQualityProportion"` //评估质量（质检合格比例）
+	EvalAmount            int    `json:"evalAmount"`            //评估价值
+	//仓库监管方提供仓单信息
+	Supervisor        string `json:"supervisor"`
+	StorageAmount     int    `json:"storageAmount"`     //仓库货品总量
+	StorageType       string `json:"storageType"`       //货品种类
+	StorageAddress    string `json:"storageAddress"`    //存储地址
+	EndDate           string `json:"endDate"`           //期限
+	StorageInfoUpdate string `json:"storageInfoUpdate"` //出具仓单的时间（web端自动生成）
+	//回购方准备好可以后续回购
+	Repurchaser string `json:"repurchaser"`
+	//银行接受
+	AcceptedDateTime string `json:"acceptedDateTime"` //银行接受时间（web端自动生成）
+	//珠宝商回购
+	PaidbackDateTime string `json:"paidBackDateTime"` //珠宝商回购时间（web端自动生成）
+	//回购方回购
+	RepurchaseDateTime string `json:"repurchaseDateTime"` //回购方回购时间（web端自动生成）
 	state              State  `metadata:"currentState"`
 	prevstate          State  `metadata:"prevState,optional"`
 	class              string `metadata:"class"`
 	key                string `metadata:"key"`
-	Bank               string `json:"bank"`
-	Evaluator          string `json:"evaluator"`
-	Repurchaser        string `json:"repurchaser"`
-	Supervisor         string `json:"supervisor"`
 }
 
 // UnmarshalJSON special handler for managing JSON marshalling
@@ -119,14 +151,14 @@ func (ifc *InventoryFinancingPaper) GetBank() string {
 	return ifc.Bank
 }
 
-// GetApplyDateTime returns the applydatetime
-func (ifc *InventoryFinancingPaper) GetApplyDateTime() string {
-	return ifc.ApplyDateTime
+// GetProductor returns the productor
+func (ifc *InventoryFinancingPaper) GetProductor() string {
+	return ifc.Productor
 }
 
-// GetReceiveDateTime returns the receivedatetime
-func (ifc *InventoryFinancingPaper) GetReceiveDateTime() string {
-	return ifc.ReceiveDateTime
+// GetBrandCompany returns the productor
+func (ifc *InventoryFinancingPaper) GetBrandCompany() string {
+	return ifc.BrandCompany
 }
 
 // GetEvaluator returns the evaluator
@@ -134,19 +166,9 @@ func (ifc *InventoryFinancingPaper) GetEvaluator() string {
 	return ifc.Evaluator
 }
 
-// GetEvalDateTime returns the receivedatetime
-func (ifc *InventoryFinancingPaper) GetEvalDateTime() string {
-	return ifc.EvalDateTime
-}
-
 // GetRepurchaser returns the repurchaser
 func (ifc *InventoryFinancingPaper) GetRepurchaser() string {
 	return ifc.Repurchaser
-}
-
-// GetReadyDateTime returns the receivedatetime.
-func (ifc *InventoryFinancingPaper) GetReadyDateTime() string {
-	return ifc.ReadyDateTime
 }
 
 // GetSupervisor returns the supervisor
@@ -154,29 +176,9 @@ func (ifc *InventoryFinancingPaper) GetSupervisor() string {
 	return ifc.Supervisor
 }
 
-// GetAcceptDateTime returns the acceptdatetime
-func (ifc *InventoryFinancingPaper) GetAcceptDateTime() string {
-	return ifc.AcceptDateTime
-}
-
 // GetEndDate returns the receivedatetime
 func (ifc *InventoryFinancingPaper) GetEndDate() string {
 	return ifc.EndDate
-}
-
-// GetPaidbackDateTime returns the receivedatetime
-func (ifc *InventoryFinancingPaper) GetPaidbackDateTime() string {
-	return ifc.PaidbackDateTime
-}
-
-// GetRepurchaseDateTime returns the receivedatetime
-func (ifc *InventoryFinancingPaper) GetRepurchaseDateTime() string {
-	return ifc.RepurchaseDateTime
-}
-
-// GetReviseDatetime returns the receivedatetime
-func (ifc *InventoryFinancingPaper) GetReviseDatetime() string {
-	return ifc.ReviseDateTime
 }
 
 // SetBank set the Bank to bank
@@ -184,14 +186,14 @@ func (ifc *InventoryFinancingPaper) SetBank(bank string) {
 	ifc.Bank = bank
 }
 
-//SetApplyDateTime set the ApplyDateTime to applyDateTime
-func (ifc *InventoryFinancingPaper) SetApplyDateTime(applyDateTime string) {
-	ifc.ApplyDateTime = applyDateTime
+// SetProductor set the Productor to productor
+func (ifc *InventoryFinancingPaper) SetProductor(productor string) {
+	ifc.Productor = productor
 }
 
-//SetReceiveDateTime set the ReceiveDateTime to receiveDateTime
-func (ifc *InventoryFinancingPaper) SetReceiveDateTime(receiveDateTime string) {
-	ifc.ReceiveDateTime = receiveDateTime
+// SetBrandCompany set the BrandCompany to brandCompany
+func (ifc *InventoryFinancingPaper) SetBrandCompany(brandCompany string) {
+	ifc.Productor = brandCompany
 }
 
 // SetEvaluator set the Evaluator to evaluator
@@ -199,44 +201,14 @@ func (ifc *InventoryFinancingPaper) SetEvaluator(evaluator string) {
 	ifc.Evaluator = evaluator
 }
 
-//SetEvalDateTime set the EvalDateTime to evalDateTime
-func (ifc *InventoryFinancingPaper) SetEvalDateTime(evalDateTime string) {
-	ifc.EvalDateTime = evalDateTime
-}
-
 // SetRepurchaser set the Repurchaser to repurchaser
 func (ifc *InventoryFinancingPaper) SetRepurchaser(repurchaser string) {
 	ifc.Repurchaser = repurchaser
 }
 
-//SetReadyDateTime set the ReadyDateTime to receiveDateTime
-func (ifc *InventoryFinancingPaper) SetReadyDateTime(readyDateTime string) {
-	ifc.ReadyDateTime = readyDateTime
-}
-
-//SetAcceptDateTime set the ApplyDateTime to the apllyDateTime
-func (ifc *InventoryFinancingPaper) SetAcceptDateTime(acceptDateTime string) {
-	ifc.ReadyDateTime = acceptDateTime
-}
-
 // SetEndDate set the EndDate to endDate
 func (ifc *InventoryFinancingPaper) SetEndDate(endDate string) {
 	ifc.EndDate = endDate
-}
-
-// SetPaidbackDateTime set the Paidbackdatetime to paidbackDateTime
-func (ifc *InventoryFinancingPaper) SetPaidbackDateTime(paidbackDateTime string) {
-	ifc.PaidbackDateTime = paidbackDateTime
-}
-
-// SetRepurchaseDateTime set the repurchaseatetime
-func (ifc *InventoryFinancingPaper) SetRepurchaseDateTime(repurchaseDateTime string) {
-	ifc.RepurchaseDateTime = repurchaseDateTime
-}
-
-// SetReviseDatetime set the recisedatetime
-func (ifc *InventoryFinancingPaper) SetReviseDatetime(reviseDateTime string) {
-	ifc.ReviseDateTime = reviseDateTime
 }
 
 // SetSupervisor set the state to supervisor
@@ -252,16 +224,6 @@ func (ifc *InventoryFinancingPaper) SetApplied() {
 // SetReceived sets the state to received
 func (ifc *InventoryFinancingPaper) SetReceived() {
 	ifc.state = RECEIVED
-}
-
-// SetEvaluated sets the state to Evaluated
-func (ifc *InventoryFinancingPaper) SetEvaluated() {
-	ifc.state = EVALUATED
-}
-
-// SetReadyREPO sets the state to readyRepo
-func (ifc *InventoryFinancingPaper) SetReadyREPO() {
-	ifc.state = READYREPO
 }
 
 // SetAccepted sets the state to accepted
@@ -289,64 +251,46 @@ func (ifc *InventoryFinancingPaper) SetRepurchased() {
 	ifc.state = REPURCHADED
 }
 
-// IsApplied returns true if state is issued
+// IsApplied returns true if state is applied
 func (ifc *InventoryFinancingPaper) IsApplied() bool {
 	return ifc.state == APPLIED
 }
 
-// IsReceived returns true if state is issued
+// IsReceived returns true if state is received
 func (ifc *InventoryFinancingPaper) IsReceived() bool {
 	return ifc.state == RECEIVED
 }
 
-// IsEvaluated returns true if state is issued
-func (ifc *InventoryFinancingPaper) IsEvaluated() bool {
-	return ifc.state == EVALUATED
-}
-
-// IsReadyREPO returns true if state is issued
-func (ifc *InventoryFinancingPaper) IsReadyREPO() bool {
-	return ifc.state == READYREPO
-}
-
-// IsAccepted returns true if state is issued
+// IsAccepted returns true if state is accepted
 func (ifc *InventoryFinancingPaper) IsAccepted() bool {
 	return ifc.state == ACCEPTED
 }
 
-// Supervising returns true if state is issued
+// Supervising returns true if state is supervising
 func (ifc *InventoryFinancingPaper) IsSupervising() bool {
 	return ifc.state == SUPERVISING
 }
 
-// IsPaidBack returns true if state is issued
+// IsPaidBack returns true if state is paidback
 func (ifc *InventoryFinancingPaper) IsPaidBack() bool {
 	return ifc.state == PAIDBACK
 }
 
-// IsDefault returns true if state is issued
+// IsDefault returns true if state is default
 func (ifc *InventoryFinancingPaper) IsDefault() bool {
 	return ifc.state == DEFAULT
 }
 
-// IsRepurchased returns true if state is issued
+// IsRepurchased returns true if state is repurchased
 func (ifc *InventoryFinancingPaper) IsRepurchased() bool {
 	return ifc.state == REPURCHADED
 }
 
-// IsRejectable returns true if state is in RECEIVED EVALUATED READYREPO
+// IsRejectable returns true if state is in RECEIVED
 func (ifc *InventoryFinancingPaper) IsRejectable() bool {
 	var ret bool = false
 
 	if ifc.state == RECEIVED {
-		ret = true
-	}
-
-	if ifc.state == EVALUATED {
-		ret = true
-	}
-
-	if ifc.state == READYREPO {
 		ret = true
 	}
 	return ret
