@@ -193,7 +193,7 @@ func (ifc *InventoryFinancingPaper) SetProductor(productor string) {
 
 // SetBrandCompany set the BrandCompany to brandCompany
 func (ifc *InventoryFinancingPaper) SetBrandCompany(brandCompany string) {
-	ifc.Productor = brandCompany
+	ifc.BrandCompany = brandCompany
 }
 
 // SetEvaluator set the Evaluator to evaluator
