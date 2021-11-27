@@ -16,8 +16,7 @@ import (
 type State uint
 
 const (
-	AUTHORIZED = iota + 1
-	APPLIED
+	APPLIED = iota + 1
 	RECEIVED
 	ACCEPTED
 	SUPERVISING
@@ -27,7 +26,7 @@ const (
 )
 
 func (state State) String() string {
-	names := []string{"APPLIED ", "RECEIVED", "EVALUATED", "READYREPO", "ACCEPTED", "SUPERVISING", "PAIDBACK", "DEFAULT", "REPURCHADED"}
+	names := []string{"APPLIED ", "RECEIVED", "ACCEPTED", "SUPERVISING", "PAIDBACK", "DEFAULT", "REPURCHADED"}
 
 	if state < APPLIED || state > REPURCHADED {
 		return "UNKNOWN"
@@ -94,7 +93,8 @@ type InventoryFinancingPaper struct {
 	EndDate           string `json:"endDate"`           //期限
 	StorageInfoUpdate string `json:"storageInfoUpdate"` //出具仓单的时间（web端自动生成）
 	//回购方准备好可以后续回购
-	Repurchaser string `json:"repurchaser"`
+	Repurchaser   string `json:"repurchaser"`
+	ReadyDateTime string `json:"readyDateTime"`
 	//银行接受
 	AcceptedDateTime string `json:"acceptedDateTime"` //银行接受时间（web端自动生成）
 	//珠宝商回购
@@ -151,39 +151,14 @@ func (ifc *InventoryFinancingPaper) GetBank() string {
 	return ifc.Bank
 }
 
-// GetProductor returns the productor
-func (ifc *InventoryFinancingPaper) GetProductor() string {
-	return ifc.Productor
-}
-
-// GetBrandCompany returns the productor
-func (ifc *InventoryFinancingPaper) GetBrandCompany() string {
-	return ifc.BrandCompany
-}
-
-// GetEvaluator returns the evaluator
-func (ifc *InventoryFinancingPaper) GetEvaluator() string {
-	return ifc.Evaluator
-}
-
-// GetRepurchaser returns the repurchaser
-func (ifc *InventoryFinancingPaper) GetRepurchaser() string {
-	return ifc.Repurchaser
-}
-
-// GetSupervisor returns the supervisor
-func (ifc *InventoryFinancingPaper) GetSupervisor() string {
-	return ifc.Supervisor
-}
-
-// GetEndDate returns the receivedatetime
-func (ifc *InventoryFinancingPaper) GetEndDate() string {
-	return ifc.EndDate
-}
-
 // SetBank set the Bank to bank
 func (ifc *InventoryFinancingPaper) SetBank(bank string) {
 	ifc.Bank = bank
+}
+
+// GetProductor returns the productor
+func (ifc *InventoryFinancingPaper) GetProductor() string {
+	return ifc.Productor
 }
 
 // SetProductor set the Productor to productor
@@ -191,9 +166,19 @@ func (ifc *InventoryFinancingPaper) SetProductor(productor string) {
 	ifc.Productor = productor
 }
 
+// GetBrandCompany returns the productor
+func (ifc *InventoryFinancingPaper) GetBrandCompany() string {
+	return ifc.BrandCompany
+}
+
 // SetBrandCompany set the BrandCompany to brandCompany
 func (ifc *InventoryFinancingPaper) SetBrandCompany(brandCompany string) {
 	ifc.BrandCompany = brandCompany
+}
+
+// GetEvaluator returns the evaluator
+func (ifc *InventoryFinancingPaper) GetEvaluator() string {
+	return ifc.Evaluator
 }
 
 // SetEvaluator set the Evaluator to evaluator
@@ -201,19 +186,34 @@ func (ifc *InventoryFinancingPaper) SetEvaluator(evaluator string) {
 	ifc.Evaluator = evaluator
 }
 
+// GetRepurchaser returns the repurchaser
+func (ifc *InventoryFinancingPaper) GetRepurchaser() string {
+	return ifc.Repurchaser
+}
+
 // SetRepurchaser set the Repurchaser to repurchaser
 func (ifc *InventoryFinancingPaper) SetRepurchaser(repurchaser string) {
 	ifc.Repurchaser = repurchaser
 }
 
-// SetEndDate set the EndDate to endDate
-func (ifc *InventoryFinancingPaper) SetEndDate(endDate string) {
-	ifc.EndDate = endDate
+// GetSupervisor returns the supervisor
+func (ifc *InventoryFinancingPaper) GetSupervisor() string {
+	return ifc.Supervisor
 }
 
 // SetSupervisor set the state to supervisor
 func (ifc *InventoryFinancingPaper) SetSupervisor(supervisor string) {
 	ifc.Supervisor = supervisor
+}
+
+// GetEndDate returns the receivedatetime
+func (ifc *InventoryFinancingPaper) GetEndDate() string {
+	return ifc.EndDate
+}
+
+// SetEndDate set the EndDate to endDate
+func (ifc *InventoryFinancingPaper) SetEndDate(endDate string) {
+	ifc.EndDate = endDate
 }
 
 // SetApplied set the state to applied
