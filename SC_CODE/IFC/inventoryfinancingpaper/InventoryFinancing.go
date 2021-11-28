@@ -74,8 +74,6 @@ type InventoryFinancingPaper struct {
 	GrantedStartDate      string `json:"grantedStartDate"`      //授权开始日期
 	GrantedEndDate        string `json:"grantedEndDate"`        //授权结束日期
 	GrantedInfoUpdateTime string `json:"grantedInfoUpdateTime"` //授权信息更新日期（web端自动生成）
-	//银行认证供应链各方的背书
-	AuthorizedDate string `json:"authorizedDate "` //认证和授权时间（web端自动生成）
 	//银行收到融资申请
 	Bank            string `json:"bank"`
 	ReceiveDateTime string `json:"receiveDateTime"` //收到融资申请时间（web端自动生成）
@@ -96,7 +94,7 @@ type InventoryFinancingPaper struct {
 	Repurchaser   string `json:"repurchaser"`
 	ReadyDateTime string `json:"readyDateTime"`
 	//银行接受
-	AcceptedDateTime string `json:"acceptedDateTime"` //银行接受时间（web端自动生成）
+	AcceptDateTime string `json:"acceptedDateTime"` //银行接受时间（web端自动生成）
 	//珠宝商回购
 	PaidbackDateTime string `json:"paidBackDateTime"` //珠宝商回购时间（web端自动生成）
 	//回购方回购
@@ -105,6 +103,8 @@ type InventoryFinancingPaper struct {
 	prevstate          State  `metadata:"prevState,optional"`
 	class              string `metadata:"class"`
 	key                string `metadata:"key"`
+	//珠宝商重写
+	ReviseDateTime string `json:"reviseDateTime"`
 }
 
 // UnmarshalJSON special handler for managing JSON marshalling
