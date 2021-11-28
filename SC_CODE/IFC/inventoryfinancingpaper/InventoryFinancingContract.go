@@ -42,7 +42,6 @@ func (c *Contract) InitLedger(ctx contractapi.TransactionContextInterface) error
 			GrantedStartDate:      "202001",
 			GrantedEndDate:        "202203",
 			GrantedInfoUpdateTime: "202111",
-			AuthorizedDate:        "202110",
 			Bank:                  "Heng Seng",
 			ReceiveDateTime:       "202111",
 			Evaluator:             "coco",
@@ -57,7 +56,7 @@ func (c *Contract) InitLedger(ctx contractapi.TransactionContextInterface) error
 			EndDate:               "202203",
 			StorageInfoUpdate:     "202111",
 			Repurchaser:           "Chou Seng Seng",
-			AcceptedDateTime:      "202111",
+			AcceptDateTime:        "202111",
 			PaidbackDateTime:      "",
 			RepurchaseDateTime:    "202203",
 			state:                 PAIDBACK,
@@ -80,7 +79,6 @@ func (c *Contract) InitLedger(ctx contractapi.TransactionContextInterface) error
 			GrantedStartDate:      "202102",
 			GrantedEndDate:        "202109",
 			GrantedInfoUpdateTime: "202111",
-			AuthorizedDate:        "202109",
 			Bank:                  "China Bank",
 			ReceiveDateTime:       "202111",
 			Evaluator:             "kimi",
@@ -95,7 +93,7 @@ func (c *Contract) InitLedger(ctx contractapi.TransactionContextInterface) error
 			EndDate:               "202211",
 			StorageInfoUpdate:     "202111",
 			Repurchaser:           "Chou Tai Fork",
-			AcceptedDateTime:      "202211",
+			AcceptDateTime:        "202211",
 			PaidbackDateTime:      "202201",
 			RepurchaseDateTime:    "",
 			state:                 REPURCHADED,
@@ -315,7 +313,7 @@ func (c *Contract) Accept(ctx TransactionContextInterface, paperNumber string, j
 
 	if paper.GetEvaluator() != "" && paper.GetRepurchaser() != "" && paper.GetSupervisor() != "" {
 		paper.SetAccepted()
-		paper.AcceptedDateTime = acceptedDateTime
+		paper.AcceptDateTime = acceptedDateTime
 
 	}
 
@@ -454,7 +452,7 @@ func (c *Contract) Reject(ctx TransactionContextInterface, jeweler string, paper
 }
 
 // Revise a contract
-func (c *Contract) Revise(ctx TransactionContextInterface, jeweler string, paperNumber string, financingAmount int) (*InventoryFinancingPaper, error) {
+func (c *Contract) Revise(ctx TransactionContextInterface, jeweler string, paperNumber string, financingAmount int, reviseDateTime string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
 	if err != nil {
 		return nil, err
@@ -465,6 +463,7 @@ func (c *Contract) Revise(ctx TransactionContextInterface, jeweler string, paper
 	}
 
 	paper.FinancingAmount = financingAmount
+	paper.ReviseDateTime = reviseDateTime
 
 	paper.Reinstate()
 
