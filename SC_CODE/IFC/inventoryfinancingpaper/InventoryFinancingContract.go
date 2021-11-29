@@ -331,7 +331,7 @@ func (c *Contract) Accept(ctx TransactionContextInterface, paperNumber string, j
 }
 
 // Supervising updates a inventory paper to be in supervising status and sets the next dealer
-func (c *Contract) Supervise(ctx TransactionContextInterface, paperNumber string, jeweler string, supervisor string) (*InventoryFinancingPaper, error) {
+func (c *Contract) Supervise(ctx TransactionContextInterface, paperNumber string, jeweler string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
 
 	if err != nil {
@@ -402,7 +402,7 @@ func (c *Contract) Default(ctx TransactionContextInterface, paperNumber string, 
 }
 
 // Repurchase updates a inventory paper status to be repurchsed
-func (c *Contract) Repurchase(ctx TransactionContextInterface, jeweler string, paperNumber string, repurchaseDateTime string) (*InventoryFinancingPaper, error) {
+func (c *Contract) Repurchase(ctx TransactionContextInterface, paperNumber string, jeweler string, repurchaseDateTime string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
 
 	if err != nil {
@@ -426,7 +426,7 @@ func (c *Contract) Repurchase(ctx TransactionContextInterface, jeweler string, p
 }
 
 // Reject a contract
-func (c *Contract) Reject(ctx TransactionContextInterface, jeweler string, paperNumber string) (*InventoryFinancingPaper, error) {
+func (c *Contract) Reject(ctx TransactionContextInterface, paperNumber string, jeweler string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
 
 	if err != nil {
@@ -452,7 +452,7 @@ func (c *Contract) Reject(ctx TransactionContextInterface, jeweler string, paper
 }
 
 // Revise a contract
-func (c *Contract) Revise(ctx TransactionContextInterface, jeweler string, paperNumber string, financingAmount int, reviseDateTime string) (*InventoryFinancingPaper, error) {
+func (c *Contract) Revise(ctx TransactionContextInterface, paperNumber string, jeweler string, financingAmount int, reviseDateTime string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
 	if err != nil {
 		return nil, err
@@ -477,7 +477,7 @@ func (c *Contract) Revise(ctx TransactionContextInterface, jeweler string, paper
 }
 
 // QueryPaper updates a inventory paper to be in received status and sets the next dealer
-func (c *Contract) QueryPaper(ctx TransactionContextInterface, jeweler string, paperNumber string) (*InventoryFinancingPaper, error) {
+func (c *Contract) QueryPaper(ctx TransactionContextInterface, paperNumber string, jeweler string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
 
 	if err != nil {
