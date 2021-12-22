@@ -53,7 +53,8 @@ func (c *Contract) InitLedger(ctx contractapi.TransactionContextInterface) error
 			EvalDateTime:          "202112",
 			EvalType:              "K金",
 			EvalQualityProportion: "99%",
-			EvalAmount:            "260,000,000",
+			EvalAmount:            "1000kg",
+			EvalPrice:             "260,000,000",
 			Supervisor:            "宝时云仓",
 			StorageAmount:         "1000kg",
 			StorageType:           "K金",
@@ -185,7 +186,7 @@ func (c *Contract) Receive(ctx TransactionContextInterface, paperNumber string, 
 }
 
 //Evaluate updates a inventory paper to be evaluated
-func (c *Contract) Evaluate(ctx TransactionContextInterface, paperNumber string, jeweler string, evaluator string, evalType string, evalQualityProportion string, evalAmount string, evalDateTime string) (*InventoryFinancingPaper, error) {
+func (c *Contract) Evaluate(ctx TransactionContextInterface, paperNumber string, jeweler string, evaluator string, evalType string, evalQualityProportion string, evalAmount string, evalPrice string, evalDateTime string) (*InventoryFinancingPaper, error) {
 	paper, err := ctx.GetPaperList().GetPaper(jeweler, paperNumber)
 	if err != nil {
 		return nil, err
@@ -197,6 +198,7 @@ func (c *Contract) Evaluate(ctx TransactionContextInterface, paperNumber string,
 			paper.EvalQualityProportion = evalQualityProportion
 			paper.EvalAmount = evalAmount
 			paper.EvalDateTime = evalDateTime
+			paper.EvalPrice = evalPrice
 		}
 
 	}

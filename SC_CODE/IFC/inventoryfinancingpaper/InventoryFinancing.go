@@ -87,7 +87,8 @@ type InventoryFinancingPaper struct {
 	EvalDateTime          string `json:"evalDateTime"`          //鉴定时间（web端自动生成）
 	EvalType              string `json:"evalType"`              //评估种类
 	EvalQualityProportion string `json:"evalQualityProportion"` //评估质量（质检合格比例）
-	EvalAmount            string `json:"evalAmount"`            //评估价值 int->string
+	EvalAmount            string `json:"evalAmount"`            //评估产品数量 int->string
+	EvalPrice             string `json:"evalPrice"`             //评估价格
 	//仓库监管方提供仓单信息
 	Supervisor        string `json:"supervisor"`
 	StorageAmount     string `json:"storageAmount"`     //仓库货品总量
