@@ -58,18 +58,23 @@ type jsonInventoryFinancingPaper struct {
 // InventoryFinancingPaper 定义了一个珠宝存货融资流程
 type InventoryFinancingPaper struct {
 	//珠宝商发起融资申请
-	PaperNumber     string `json:"paperNumber"`     //融资申请编号
-	Jeweler         string `json:"jeweler"`         //融资申请珠宝商
-	ApplyDateTime   string `json:"applyDateTime"`   //提交申请时间（web端自动生成）
-	FinancingAmount int    `json:"financingAmount"` //融资金额
+	PaperNumber         string `json:"paperNumber"`         //融资申请编号
+	Jeweler             string `json:"jeweler"`             //融资申请珠宝商
+	JewelerAddr         string `json:"jewelerAddr"`         //融资申请珠宝商门店地址
+	ApplyDateTime       string `json:"applyDateTime"`       //提交申请时间（web端自动生成）
+	FinancingAmount     string `json:"financingAmount"`     //融资金额 **** int->string
+	PledgeType          string `json:"pledgeType"`          //质押的货品类别****** new
+	PledgeAmount        string `json:"pledgeAmount"`        //质押货品数量****** new
+	PledgeApraisedValue string `json:"pledgeApraisedValue"` //质押货品预估价值****** new
 	//生产者提供了生产信息上链
 	Productor             string `json:"productor"`             //生产商
 	ProductType           string `json:"productType"`           //货品种类
-	ProductAmount         string `json:"productAmount"`         //货品数量
+	ProductAmount         string `json:"productAmount"`         //货品数量 int->string
 	ProductDate           string `json:"productDate"`           //货品生产日期
 	ProductInfoUpdateTime string `json:"productInfoUpdateTime"` //货品信息更新日期（web端自动生成）
 	//品牌方提供授权信息上链
-	BrandCompany          string `json:"brandCompany "`
+	BrandCompany          string `json:"brandCompany "`         //品牌方
+	BrandCompanyAddr      string `json:"brandCompanyAddr "`     //品牌方地址
 	GrantedObject         string `json:"grantedObject "`        //授权对象
 	GrantedStartDate      string `json:"grantedStartDate"`      //授权开始日期
 	GrantedEndDate        string `json:"grantedEndDate"`        //授权结束日期
@@ -82,13 +87,14 @@ type InventoryFinancingPaper struct {
 	EvalDateTime          string `json:"evalDateTime"`          //鉴定时间（web端自动生成）
 	EvalType              string `json:"evalType"`              //评估种类
 	EvalQualityProportion string `json:"evalQualityProportion"` //评估质量（质检合格比例）
-	EvalAmount            int    `json:"evalAmount"`            //评估价值
+	EvalAmount            string `json:"evalAmount"`            //评估价值 int->string
 	//仓库监管方提供仓单信息
 	Supervisor        string `json:"supervisor"`
-	StorageAmount     int    `json:"storageAmount"`     //仓库货品总量
+	StorageAmount     string `json:"storageAmount"`     //仓库货品总量
 	StorageType       string `json:"storageType"`       //货品种类
 	StorageAddress    string `json:"storageAddress"`    //存储地址
-	EndDate           string `json:"endDate"`           //期限
+	StartDate         string `json:"startDate"`         //融资开始时间******* new
+	EndDate           string `json:"endDate"`           //融资终止时间
 	StorageInfoUpdate string `json:"storageInfoUpdate"` //出具仓单的时间（web端自动生成）
 	//回购方准备好可以后续回购
 	Repurchaser   string `json:"repurchaser"`
