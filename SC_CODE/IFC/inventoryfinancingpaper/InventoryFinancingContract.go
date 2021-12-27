@@ -89,7 +89,7 @@ func (c *Contract) InitLedger(ctx contractapi.TransactionContextInterface) error
 
 // Apply creates a new inventory paper and stores it in the world state.
 func (c *Contract) Apply(ctx TransactionContextInterface, paperNumber string, jeweler string, jewelerAddr string, applyDateTime string, financingAmount string, pledgeType string, pledgeAmount string, pledgeApraisedValue string) (*InventoryFinancingPaper, error) {
-	paper := InventoryFinancingPaper{PaperNumber: paperNumber, Jeweler: jeweler, FinancingAmount: financingAmount, ApplyDateTime: applyDateTime}
+	paper := InventoryFinancingPaper{PaperNumber: paperNumber, Jeweler: jeweler, JewelerAddr: jewelerAddr, FinancingAmount: financingAmount, PledgeType: pledgeType, PledgeAmount: pledgeAmount, PledgeApraisedValue: pledgeApraisedValue, ApplyDateTime: applyDateTime}
 
 	paper.SetApplied()
 	paper.LogPrevState()
